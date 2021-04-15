@@ -61,6 +61,17 @@ registerRoute(
   })
 );
 
+const matchCb = ({url, request, event}) => {
+  return (url.host === 'jsonplaceholder.typicode.com');
+};
+
+registerRoute(matchCb, new StaleWhileRevalidate({
+  cacheName: 'todos',
+  plugins: [
+     new ExpirationPlugin({maxAgeSeconds: 60000})
+  ]
+}));
+
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
